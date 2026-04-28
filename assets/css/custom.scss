@@ -1,0 +1,78 @@
+.cusHeader-cont {
+    border: 1px solid rgb(139 168 254 / 7%);
+    background-color: rgb(54 54 81 / 8%);
+    border-radius: 06px;
+    backdrop-filter: blur(10px);
+    opacity: 1;
+    box-shadow: rgba(255, 255, 255, 0.05) 0px 0px 8px 0px inset;
+
+    .row .cusHeader-wrapper {
+        padding: 14px 18px;
+
+        .logo-box a img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .header-button a {
+            border-radius: 12px;
+        }
+    }
+}
+
+.footer-logo-box a img {
+    width: 80px;
+    height: 80px;
+}
+
+.skills-widget .skill-item .icon-box img {
+    width: 100%;
+}
+
+.myResume-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    height: 385px;
+    overflow: hidden;
+    transition: height 2s ease-in-out;
+    transition-delay: 0.2s;
+    border-radius: 16px;
+    box-shadow: 0 0 20px 0px #ffffff;
+ 
+    .gradient-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.35));
+      transition: all 2s ease-in-out;
+    }
+ 
+    figure {
+        width: 100%;
+        border-radius: 16px;
+        margin: 0;
+        img {
+            border-radius: 16px;
+            width: 100%;
+        }
+    }
+ 
+    button.tj-btn-primary {
+        position: absolute;
+        top: calc(100% - 30px);
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 06px;
+        cursor: pointer;
+    }
+}
+
+.downloadCv-btn.tj-btn-primary {
+    display: flex;
+    justify-content: center;
+    margin: 30px auto;
+    display: none;
+}
