@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Healthcare - Advanced Diagnostics Platform</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- AOS Scroll Animations -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-green: #16a34a;
+            --dark-bg: #0f172a;
+            --light-bg: #f8fafc;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-dark);
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar-custom {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-custom.scrolled {
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 24px;
+            color: var(--primary-green) !important;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link {
+            color: var(--text-dark) !important;
+            font-weight: 500;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary-green) !important;
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary-green);
+        }
+
+        .btn-nav {
+            background: var(--primary-green);
+            color: white;
+            border: none;
+            padding: 8px 25px;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-nav:hover {
+            background: #15803d;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(22, 163, 74, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+        /* ===== PAGE CONTAINER ===== */
+        .page-container {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .page-container.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== HOME PAGE ===== */
+        .hero-section {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #1e3a5f 100%);
+            color: white;
+            padding: 80px 0;
+            position: relative;
+            overflow: hidden;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: rgba(22, 163, 74, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(30px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 56px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+
+        .btn-primary-custom,
+        .btn-secondary-custom {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary-custom {
+            background: var(--primary-green);
+            color: white;
+        }
+
+        .btn-primary-custom:hover {
+            background: #15803d;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(22, 163, 74, 0.3);
+            color: white;
+        }
+
+        .btn-secondary-custom {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary-custom:hover {
+            background: white;
+            color: var(--dark-bg);
+            transform: translateY(-3px);
+        }
+
+        /* ===== STATS SECTION ===== */
+        .stats-section {
+            background: white;
+            padding: 60px 0;
+            margin-top: -30px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            text-align: center;
+        }
+
+        .stat-item {
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-10px);
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--primary-green);
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        /* ===== SERVICES PAGE ===== */
+        .services-section {
+            background: var(--light-bg);
+            padding: 80px 0;
+            min-height: 600px;
+        }
+
+        .section-title {
+            font-size: 42px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 60px;
+            color: var(--text-dark);
+        }
+
+        .section-title span {
+            color: var(--primary-green);
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border-top: 4px solid transparent;
+            cursor: pointer;
+            height: 100%;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            border-top-color: var(--primary-green);
+        }
+
+        .service-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary-green), #22c55e);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .service-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        .service-description {
+            font-size: 14px;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* ===== FEATURES PAGE ===== */
+        .features-section {
+            background: white;
+            padding: 80px 0;
+            min-height: 600px;
+        }
+
+        .feature-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            margin-bottom: 60px;
+        }
+
+        .feature-image {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+        }
+
+        .feature-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .feature-text h3 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        .feature-text p {
+            font-size: 16px;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .feature-list li {
+            font-size: 16px;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .feature-list li:before {
+            content: '✓';
+            color: var(--primary-green);
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-box {
+            background: var(--light-bg);
+            padding: 30px;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-green);
+            transition: all 0.3s ease;
+        }
+
+        .feature-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        .feature-box h4 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
+        .feature-box p {
+            font-size: 14px;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* ===== BRANDS PAGE ===== */
+        .brands-section {
+            background: linear-gradient(135deg, var(--primary-green) 0%, #22c55e 100%);
+            color: white;
+            padding: 80px 0;
+            min-height: 600px;
+        }
+
+        .brand-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .brand-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .brand-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255,255,255,0.15);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .brand-logo {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .brand-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .brand-description {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* ===== TESTIMONIALS PAGE ===== */
+        .testimonials-section {
+            background: var(--light-bg);
+            padding: 80px 0;
+            min-height: 600px;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border-top: 4px solid var(--primary-green);
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .testimonial-text {
+            font-size: 15px;
+            margin-bottom: 20px;
+            font-style: italic;
+            line-height: 1.6;
+            color: var(--text-light);
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-green), #22c55e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+        }
+
+        .author-info h5 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .author-info p {
+            margin: 0;
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        /* ===== PARTNERSHIPS PAGE ===== */
+        .partnerships-section {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #1e3a5f 100%);
+            color: white;
+            padding: 80px 0;
+            min-height: 600px;
+        }
+
+        .partnership-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        .partnership-content {
+            animation: slideInLeft 0.8s ease;
+        }
+
+        .partnership-content h3 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .partnership-content p {
+            font-size: 16px;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .partnership-list {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .partnership-list li {
+            font-size: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .partnership-list li:before {
+            content: '→';
+            color: var(--primary-green);
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .partnership-image {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            animation: slideInRight 0.8s ease;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* ===== CONTACT PAGE ===== */
+        .contact-section {
+            background: white;
+            padding: 80px 0;
+            min-height: 600px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: start;
+            margin-top: 50px;
+        }
+
+        .contact-form {
+            background: var(--light-bg);
+            padding: 40px;
+            border-radius: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .info-item {
+            display: flex;
+            gap: 20px;
+        }
+
+        .info-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--light-bg);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-green);
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .info-content h4 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .info-content p {
+            margin: 0;
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer-section {
+            background: #0a0f1b;
+            color: rgba(255,255,255,0.7);
+            padding: 60px 0 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h5 {
+            color: white;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column ul li a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column ul li a:hover {
+            color: var(--primary-green);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(22, 163, 74, 0.3);
+            border: 1px solid var(--primary-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-green);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background: var(--primary-green);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 36px;
+            }
+
+            .section-title {
+                font-size: 32px;
+            }
+
+            .feature-content,
+            .partnership-grid,
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .btn-primary-custom,
+            .btn-secondary-custom {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        /* ===== LOADING ANIMATION ===== */
+        .spinner {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+        }
+
+        .spinner.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-lg">
+            <a class="navbar-brand" href="#" onclick="showPage('home'); return false;">
+                <i class="fas fa-stethoscope"></i> PDF Healthcare
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="#" onclick="showPage('home'); return false;">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showPage('services'); return false;">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showPage('features'); return false;">Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showPage('brands'); return false;">Brands</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showPage('testimonials'); return false;">Testimonials</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showPage('partnerships'); return false;">Partnerships</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showPage('contact'); return false;">Contact</a></li>
+                    <li class="nav-item"><button class="btn btn-nav" onclick="showPage('contact'); return false;">Get Started</button></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== HOME PAGE ===== -->
+    <div id="home" class="page-container active">
+        <section class="hero-section">
+            <div class="container-lg">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <div class="hero-content">
+                            <h1 class="hero-title">Advancing Diagnostics: Empowering Lives.</h1>
+                            <p class="hero-subtitle">Next-generation diagnostic solutions that deliver accurate results faster, helping healthcare providers make informed decisions and improve patient outcomes.</p>
+                            <div class="hero-buttons" style="display: flex; gap: 20px;">
+                                <button class="btn-primary-custom" onclick="showPage('services'); return false;">Get Started Today</button>
+                                <button class="btn-secondary-custom" onclick="showPage('features'); return false;">Learn More <i class="fas fa-arrow-right ms-2"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats-section">
+            <div class="container-lg">
+                <div class="stats-container">
+                    <div class="stat-item">
+                        <div class="stat-number">45K+</div>
+                        <div class="stat-label">Active Users</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">750+</div>
+                        <div class="stat-label">Hospitals</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">2M+</div>
+                        <div class="stat-label">Tests Completed</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">99%</div>
+                        <div class="stat-label">Accuracy Rate</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ===== SERVICES PAGE ===== -->
+    <div id="services" class="page-container">
+        <section class="services-section">
+            <div class="container-lg">
+                <h2 class="section-title">Our Core <span>Services</span></h2>
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-microscope"></i>
+                            </div>
+                            <h4 class="service-title">Lab Testing</h4>
+                            <p class="service-description">Comprehensive laboratory testing with advanced equipment and certified professionals ensuring highest accuracy standards.</p>
+                            <button class="btn-primary-custom" style="font-size: 14px; padding: 10px 20px; margin-top: 15px;">Learn More</button>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-heartbeat"></i>
+                            </div>
+                            <h4 class="service-title">Health Monitoring</h4>
+                            <p class="service-description">Real-time health monitoring systems that track vital signs and provide instant alerts for medical professionals.</p>
+                            <button class="btn-primary-custom" style="font-size: 14px; padding: 10px 20px; margin-top: 15px;">Learn More</button>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-prescription-bottle"></i>
+                            </div>
+                            <h4 class="service-title">Prescription Analysis</h4>
+                            <p class="service-description">Smart prescription analysis and drug interaction checking to ensure patient safety and optimal medication management.</p>
+                            <button class="btn-primary-custom" style="font-size: 14px; padding: 10px 20px; margin-top: 15px;">Learn More</button>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-dna"></i>
+                            </div>
+                            <h4 class="service-title">Genetic Testing</h4>
+                            <p class="service-description">Advanced genetic analysis and screening services for personalized medicine and disease prevention.</p>
+                            <button class="btn-primary-custom" style="font-size: 14px; padding: 10px 20px; margin-top: 15px;">Learn More</button>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <h4 class="service-title">Diagnostic AI</h4>
+                            <p class="service-description">Artificial intelligence-powered diagnostic assistance that helps identify conditions early and accurately.</p>
+                            <button class="btn-primary-custom" style="font-size: 14px; padding: 10px 20px; margin-top: 15px;">Learn More</button>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h4 class="service-title">Data Analytics</h4>
+                            <p class="service-description">Comprehensive health data analytics and reporting tools for informed decision-making.</p>
+                            <button class="btn-primary-custom" style="font-size: 14px; padding: 10px 20px; margin-top: 15px;">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ===== FEATURES PAGE ===== -->
+    <div id="features" class="page-container">
+        <section class="features-section">
+            <div class="container-lg">
+                <h2 class="section-title">Advanced <span>Features</span></h2>
+                
+                <div class="feature-content" data-aos="fade-right">
+                    <div class="feature-text">
+                        <h3>Pathology & Imaging</h3>
+                        <p>Our advanced pathology and imaging services utilize cutting-edge technology to provide detailed analysis of tissue samples and medical images.</p>
+                        <ul class="feature-list">
+                            <li>Digital pathology systems</li>
+                            <li>High-resolution imaging</li>
+                            <li>AI-assisted analysis</li>
+                            <li>Real-time reporting</li>
+                        </ul>
+                        <button class="btn-primary-custom">Explore Features</button>
+                    </div>
+                    <div class="feature-image">
+                        <img src="https://via.placeholder.com/500x400/16a34a/ffffff?text=Pathology+%26+Imaging" alt="Pathology & Imaging">
+                    </div>
+                </div>
+
+                <div class="feature-content" data-aos="fade-left">
+                    <div class="feature-image">
+                        <img src="https://via.placeholder.com/500x400/16a34a/ffffff?text=Molecular+Diagnostics" alt="Molecular Diagnostics">
+                    </div>
+                    <div class="feature-text">
+                        <h3>Molecular Diagnostics</h3>
+                        <p>Precision molecular testing that identifies disease at the genetic level, enabling early intervention and personalized treatment plans.</p>
+                        <ul class="feature-list">
+                            <li>Gene sequencing</li>
+                            <li>Mutation detection</li>
+                            <li>Biomarker analysis</li>
+                            <li>Cancer screening</li>
+                        </ul>
+                        <button class="btn-primary-custom">Learn More</button>
+                    </div>
+                </div>
+
+                <h3 class="section-title" style="margin-top: 60px;">Key <span>Capabilities</span></h3>
+                <div class="feature-grid">
+                    <div class="feature-box" data-aos="fade-up">
+                        <h4><i class="fas fa-tachometer-alt" style="color: var(--primary-green); margin-right: 10px;"></i>Lightning Fast</h4>
+                        <p>Get results in minutes, not days. Our automated systems deliver quick turnaround times without compromising accuracy.</p>
+                    </div>
+                    <div class="feature-box" data-aos="fade-up" data-aos-delay="100">
+                        <h4><i class="fas fa-shield-alt" style="color: var(--primary-green); margin-right: 10px;"></i>Secure & Compliant</h4>
+                        <p>Industry-leading security measures ensure patient data protection and full HIPAA compliance.</p>
+                    </div>
+                    <div class="feature-box" data-aos="fade-up" data-aos-delay="200">
+                        <h4><i class="fas fa-cloud" style="color: var(--primary-green); margin-right: 10px;"></i>Cloud Integration</h4>
+                        <p>Seamless cloud-based platform for easy access from anywhere, anytime with automatic backups.</p>
+                    </div>
+                    <div class="feature-box" data-aos="fade-up" data-aos-delay="300">
+                        <h4><i class="fas fa-cogs" style="color: var(--primary-green); margin-right: 10px;"></i>Easy Integration</h4>
+                        <p>Compatible with existing EHR systems and medical devices. Simple APIs for custom integrations.</p>
+                    </div>
+                    <div class="feature-box" data-aos="fade-up" data-aos-delay="400">
+                        <h4><i class="fas fa-users" style="color: var(--primary-green); margin-right: 10px;"></i>Expert Support</h4>
+                        <p>24/7 dedicated support team with medical professionals ready to assist you anytime.</p>
+                    </div>
+                    <div class="feature-box" data-aos="fade-up" data-aos-delay="500">
+                        <h4><i class="fas fa-chart-bar" style="color: var(--primary-green); margin-right: 10px;"></i>Analytics</h4>
+                        <p>Comprehensive dashboards and reports for tracking performance and improving outcomes.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ===== BRANDS PAGE ===== -->
+    <div id="brands" class="page-container">
+        <section class="brands-section">
+            <div class="container-lg">
+                <h2 class="section-title" style="color: white;">Our Trusted <span style="color: rgba(255,255,255,0.9);">Brands</span></h2>
+                <div class="brand-grid">
+                    <div class="brand-card" data-aos="zoom-in">
+                        <div class="brand-logo"><i class="fas fa-hospital"></i></div>
+                        <div class="brand-name">Medicare Plus</div>
+                        <div class="brand-description">Leading healthcare provider with 500+ facilities nationwide</div>
+                    </div>
+                    <div class="brand-card" data-aos="zoom-in" data-aos-delay="100">
+                        <div class="brand-logo"><i class="fas fa-clinic-medical"></i></div>
+                        <div class="brand-name">HealthCare Solutions</div>
+                        <div class="brand-description">Integrated health management system for clinics</div>
+                    </div>
+                    <div class="brand-card" data-aos="zoom-in" data-aos-delay="200">
+                        <div class="brand-logo"><i class="fas fa-heartbeat"></i></div>
+                        <div class="brand-name">CardioMed</div>
+                        <div class="brand-description">Specialized cardiovascular diagnostic center</div>
+                    </div>
+                    <div class="brand-card" data-aos="zoom-in" data-aos-delay="300">
+                        <div class="brand-logo"><i class="fas fa-lab"></i></div>
+                        <div class="brand-name">DiagnoLab</div>
+                        <div class="brand-description">Advanced laboratory services provider</div>
+                    </div>
+                    <div class="brand-card" data-aos="zoom-in" data-aos-delay="400">
+                        <div class="brand-logo"><i class="fas fa-syringe"></i></div>
+                        <div class="brand-name">MedVac Pro</div>
+                        <div class="brand-description">Vaccination and immunology services</div>
+                    </div>
+                    <div class="brand-card" data-aos="zoom-in" data-aos-delay="500">
+                        <div class="brand-logo"><i class="fas fa-microscope"></i></div>
+                        <div class="brand-name">ResearchMed</div>
+                        <div class="brand-description">Medical research and development partner</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ===== TESTIMONIALS PAGE ===== -->
+    <div id="testimonials" class="page-container">
+        <section class="testimonials-section">
+            <div class="container-lg">
+                <h2 class="section-title">What Our Clients <span>Say</span></h2>
+                <div class="testimonial-grid">
+                    <div class="testimonial-card" data-aos="fade-up">
+                        <div class="testimonial-text">"This platform has transformed how we manage patient diagnostics. The accuracy and speed are unmatched in the industry. Our team is impressed with the quality of service."</div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">JD</div>
+                            <div class="author-info">
+                                <h5>Dr. James Davis</h5>
+                                <p>Chief Medical Officer</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="testimonial-text">"The integration was seamless and the support team was incredibly helpful. Our hospital efficiency has increased by 40% since implementation. Highly recommended!"</div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">SR</div>
+                            <div class="author-info">
+                                <h5>Sarah Reynolds</h5>
+                                <p>Hospital Director</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="testimonial-text">"Outstanding service quality! The diagnostic tools are reliable and our patients appreciate the faster results. Great investment for our medical center."</div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">MK</div>
+                            <div class="author-info">
+                                <h5>Dr. Michael Kim</h5>
+                                <p>Healthcare Provider</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="testimonial-text">"We've seen remarkable improvements in diagnostic accuracy and patient satisfaction. The platform is intuitive and the ROI is excellent. Can't ask for more!"</div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">LJ</div>
+                            <div class="author-info">
+                                <h5>Lisa Johnson</h5>
+                                <p>Lab Manager</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card" data-aos="fade-up" data-aos-delay="400">
+                        <div class="testimonial-text">"The best diagnostic solution we've invested in. The team is responsive, knowledgeable, and truly cares about our success. Fantastic experience overall."</div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">RP</div>
+                            <div class="author-info">
+                                <h5>Dr. Robert Park</h5>
+                                <p>Medical Director</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card" data-aos="fade-up" data-aos-delay="500">
+                        <div class="testimonial-text">"Exceptional platform that has revolutionized our diagnostic workflow. The support is outstanding and the features keep improving. Highly satisfied!"</div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">EW</div>
+                            <div class="author-info">
+                                <h5>Emma Wilson</h5>
+                                <p>Clinical Director</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ===== PARTNERSHIPS PAGE ===== -->
+    <div id="partnerships" class="page-container">
+        <section class="partnerships-section">
+            <div class="container-lg">
+                <h2 class="section-title" style="color: white;">Diagnostic Partnerships <span style="color: rgba(255,255,255,0.9);">for Hospitals & Clinics</span></h2>
+                
+                <div class="partnership-grid">
+                    <div class="partnership-content" data-aos="fade-right">
+                        <h3>Strategic Partnerships Empowering Healthcare</h3>
+                        <p>We collaborate with leading healthcare institutions and diagnostic centers to deliver comprehensive solutions that improve patient care and operational efficiency.</p>
+                        <ul class="partnership-list">
+                            <li>Network of 750+ hospitals and clinics</li>
+                            <li>Dedicated partnership support team</li>
+                            <li>Customized integration solutions</li>
+                            <li>Revenue sharing opportunities</li>
+                            <li>Joint training programs</li>
+                            <li>Co-marketing initiatives</li>
+                        </ul>
+                        <button class="btn-primary-custom">Become a Partner</button>
+                    </div>
+                    <div class="partnership-image" data-aos="fade-left">
+                        <img src="https://via.placeholder.com/500x400/16a34a/ffffff?text=Partnerships" alt="Partnerships">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ===== CONTACT PAGE ===== -->
+    <div id="contact" class="page-container">
+        <section class="contact-section">
+            <div class="container-lg">
+                <h2 class="section-title">Get In <span>Touch</span></h2>
+                
+                <div class="contact-grid">
+                    <div class="contact-form" data-aos="fade-right">
+                        <h4 style="margin-bottom: 30px; font-weight: 700;">Send us a Message</h4>
+                        <form onsubmit="handleFormSubmit(event)">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" placeholder="Your name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <input type="email" placeholder="your@email.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                <input type="tel" placeholder="Your phone number">
+                            </div>
+                            <div class="form-group">
+                                <label>Subject</label>
+                                <input type="text" placeholder="Subject of inquiry" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Message</label>
+                                <textarea placeholder="Your message here..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn-primary-custom" style="width: 100%; cursor: pointer;">Send Message</button>
+                        </form>
+                    </div>
+
+                    <div class="contact-info" data-aos="fade-left">
+                        <h4 style="margin-bottom: 30px; font-weight: 700;">Contact Information</h4>
+                        
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="info-content">
+                                <h4>Address</h4>
+                                <p>123 Medical Plaza, Healthcare District<br>New York, NY 10001, USA</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="info-content">
+                                <h4>Phone</h4>
+                                <p>+1 (555) 123-4567<br>+1 (555) 123-4568</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="info-content">
+                                <h4>Email</h4>
+                                <p>info@pdfhealthcare.com<br>support@pdfhealthcare.com</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="info-content">
+                                <h4>Business Hours</h4>
+                                <p>Monday - Friday: 9:00 AM - 6:00 PM<br>Saturday: 10:00 AM - 4:00 PM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer-section">
+        <div class="container-lg">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h5>About PDF Healthcare</h5>
+                    <p>Leading provider of advanced diagnostic solutions for healthcare institutions worldwide. Empowering healthcare professionals with cutting-edge technology.</p>
+                    <div class="footer-social">
+                        <div class="social-icon"><i class="fab fa-facebook-f"></i></div>
+                        <div class="social-icon"><i class="fab fa-twitter"></i></div>
+                        <div class="social-icon"><i class="fab fa-linkedin-in"></i></div>
+                        <div class="social-icon"><i class="fab fa-instagram"></i></div>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h5>Services</h5>
+                    <ul>
+                        <li><a href="#" onclick="showPage('services'); return false;">Lab Testing</a></li>
+                        <li><a href="#" onclick="showPage('services'); return false;">Health Monitoring</a></li>
+                        <li><a href="#" onclick="showPage('services'); return false;">Prescription Analysis</a></li>
+                        <li><a href="#" onclick="showPage('services'); return false;">Genetic Testing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h5>Company</h5>
+                    <ul>
+                        <li><a href="#" onclick="showPage('home'); return false;">About</a></li>
+                        <li><a href="#" onclick="showPage('testimonials'); return false;">Testimonials</a></li>
+                        <li><a href="#" onclick="showPage('partnerships'); return false;">Partnerships</a></li>
+                        <li><a href="#" onclick="showPage('contact'); return false;">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h5>Legal</h5>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">HIPAA Compliance</a></li>
+                        <li><a href="#">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 PDF Healthcare. All rights reserved. | Advancing Diagnostics. Empowering Lives.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+
+        // Page Navigation
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page-container').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+
+            // Update navbar
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+
+            // Reinitialize AOS for new content
+            AOS.refresh();
+        }
+
+        // Navbar background change on scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar-custom');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Form submission
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            alert('Thank you for your message! We will get back to you soon.');
+            event.target.reset();
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Active nav link on page load
+        window.addEventListener('load', function() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks[0].classList.add('active');
+        });
+    </script>
+
+</body>
+</html>
