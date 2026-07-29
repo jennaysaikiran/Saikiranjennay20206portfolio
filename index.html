@@ -268,7 +268,7 @@
                             <p class="lead">I break down complex user experinece
                                 problems to create integritiy focussed solutions that connect billions of people</p>
                             <div class="button-box d-flex align-items-center">
-                                <a href="./assets/img/saikiran_Experience.pdf" target="_blank" class="btn tj-btn-secondary">Download
+                                <a href="./assets/img/Saikiran_UX UI Designer.pdf" target="_blank" class="btn tj-btn-secondary">Download
                                     CV <i class="flaticon-download"></i></a>
                                 <ul class="ul-reset social-icons">
                                     <!-- <li><a href="#"><i class="fa-brands fa-twitter"></i></a></li> -->
@@ -1770,6 +1770,45 @@ Frontend Development                                            </button>
     });
 </script> -->
     
+    <!-- Site audio (attempt audible autoplay; fallback to unmute button) -->
+    <audio id="site-audio" src="assets/alexguz-funk-amp-breakbeat-541097.mp3" autoplay muted loop></audio>
+    <button id="unmute-btn" aria-label="Enable sound" style="position:fixed;left:16px;bottom:16px;z-index:9999;background:#fff8;border-radius:24px;padding:8px 12px;border:1px solid rgba(0,0,0,.08);display:none;box-shadow:0 6px 18px rgba(0,0,0,.12);font-size:14px;">🔊 Enable Sound</button>
+    <script>
+        (function(){
+            const audio = document.getElementById('site-audio');
+            const btn = document.getElementById('unmute-btn');
+            if (!audio || !btn) return;
+
+            function hideBtn(){ btn.style.display='none'; }
+            function showBtn(){ btn.style.display='block'; }
+
+            function tryUnmutedPlay(){
+                audio.muted = false;
+                const p = audio.play();
+                if (p && p.catch) {
+                    p.then(()=>hideBtn()).catch(()=>{
+                        audio.muted = true; showBtn();
+                    });
+                } else {
+                    hideBtn();
+                }
+            }
+
+            // Try shortly after load
+            window.addEventListener('load', function(){ setTimeout(tryUnmutedPlay, 200); });
+            // If blocked, show button
+            setTimeout(()=>{ if (audio.muted) showBtn(); }, 1200);
+
+            ['click','touchstart','keydown'].forEach(evt=>{
+                document.addEventListener(evt, function handler(){
+                    audio.muted = false; audio.play().catch(()=>{}); hideBtn();
+                }, { once:true, passive:true });
+            });
+
+            btn.addEventListener('click', function(e){ e.stopPropagation(); audio.muted=false; audio.play().catch(()=>{}); hideBtn(); });
+        }());
+    </script>
+
 </body>
 
 </html>
