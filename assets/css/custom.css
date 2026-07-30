@@ -85,4 +85,62 @@ a {
     color: #ffffff;
   }
 }
+
+.music-player-tab {
+  position: fixed;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: rgba(20, 20, 30, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.22);
+}
+
+.music-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255, 122, 0, 0.98), rgba(255, 63, 110, 0.95));
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.music-button:hover {
+  transform: scale(1.05);
+}
+
+.music-button i {
+  font-size: 18px;
+}
+
+.music-label {
+  color: #ffffff;
+  font-size: 13px;
+  line-height: 1.2;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+@media (max-width: 767px) {
+  .music-player-tab {
+    right: 12px;
+    bottom: 16px;
+    top: auto;
+    transform: none;
+    width: auto;
+  }
+}
+
 /*# sourceMappingURL=custom.css.map */

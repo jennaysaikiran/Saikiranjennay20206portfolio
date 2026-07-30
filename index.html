@@ -1770,42 +1770,86 @@ Frontend Development                                            </button>
     });
 </script> -->
     
-    <!-- Site audio (attempt audible autoplay; fallback to unmute button) -->
-    <audio id="site-audio" src="assets/alexguz-funk-amp-breakbeat-541097.mp3" autoplay muted loop></audio>
-    <button id="unmute-btn" aria-label="Enable sound" style="position:fixed;left:16px;bottom:16px;z-index:9999;background:#fff8;border-radius:24px;padding:8px 12px;border:1px solid rgba(0,0,0,.08);display:none;box-shadow:0 6px 18px rgba(0,0,0,.12);font-size:14px;">🔊 Enable Sound</button>
+    <!-- Music player tab -->
+    <div class="music-player-tab" id="music-player-tab">
+        <button id="music-toggle" class="music-button" aria-label="Play or pause music">
+            <i class="fa-solid fa-play"></i>
+        </button>
+        <div class="music-label" id="music-status">Play music</div>
+    </div>
+    <audio id="site-audio" src="assets/alexguz-funk-amp-breakbeat-541097.mp3" autoplay loop preload="auto" playsinline></audio>
     <script>
-        (function(){
+        (function() {
             const audio = document.getElementById('site-audio');
-            const btn = document.getElementById('unmute-btn');
-            if (!audio || !btn) return;
+            const toggleButton = document.getElementById('music-toggle');
+            const statusLabel = document.getElementById('music-status');
 
-            function hideBtn(){ btn.style.display='none'; }
-            function showBtn(){ btn.style.display='block'; }
-
-            function tryUnmutedPlay(){
-                audio.muted = false;
-                const p = audio.play();
-                if (p && p.catch) {
-                    p.then(()=>hideBtn()).catch(()=>{
-                        audio.muted = true; showBtn();
-                    });
+            function updateMusicButton() {
+                if (!audio || !toggleButton || !statusLabel) return;
+                if (audio.paused) {
+                    toggleButton.innerHTML = '<i class="fa-solid fa-play"></i>';
+                    statusLabel.textContent = 'Play music';
                 } else {
-                    hideBtn();
+                    toggleButton.innerHTML = '<i class="fa-solid fa-pause"></i>';
+                    statusLabel.textContent = 'Pause music';
                 }
             }
 
-            // Try shortly after load
-            window.addEventListener('load', function(){ setTimeout(tryUnmutedPlay, 200); });
-            // If blocked, show button
-            setTimeout(()=>{ if (audio.muted) showBtn(); }, 1200);
+            function tryPlayAudio() {
+                if (!audio) return;
+                try {
+                    audio.muted = false;
+                } catch (e) {}
+                const playPromise = audio.play();
+                if (playPromise && playPromise.catch) {
+                    playPromise.catch(() => {});
+                }
+            }
 
-            ['click','touchstart','keydown'].forEach(evt=>{
-                document.addEventListener(evt, function handler(){
-                    audio.muted = false; audio.play().catch(()=>{}); hideBtn();
-                }, { once:true, passive:true });
+            document.addEventListener('DOMContentLoaded', function () {
+                tryPlayAudio();
+                updateMusicButton();
             });
 
-            btn.addEventListener('click', function(e){ e.stopPropagation(); audio.muted=false; audio.play().catch(()=>{}); hideBtn(); });
+            window.addEventListener('load', function () {
+                tryPlayAudio();
+                updateMusicButton();
+            });
+
+            if (toggleButton) {
+                toggleButton.addEventListener('click', function () {
+                    if (!audio) return;
+                    if (audio.paused) {
+                        audio.play();
+                    } else {
+                        audio.pause();
+                    }
+                    updateMusicButton();
+                });
+            }
+
+            if (audio) {
+                audio.addEventListener('play', updateMusicButton);
+                audio.addEventListener('pause', updateMusicButton);
+            }
+
+            let attempts = 0;
+            const maxAttempts = 8;
+            const retry = setInterval(function () {
+                attempts += 1;
+                tryPlayAudio();
+                updateMusicButton();
+                if (attempts >= maxAttempts) {
+                    clearInterval(retry);
+                }
+            }, 2000);
+
+            ['click', 'touchstart', 'keydown'].forEach(function (evt) {
+                document.addEventListener(evt, function handler() {
+                    tryPlayAudio();
+                    updateMusicButton();
+                }, { once: true, passive: true });
+            });
         }());
     </script>
 
